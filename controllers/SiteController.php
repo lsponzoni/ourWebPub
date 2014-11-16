@@ -9,6 +9,9 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
+use app\models\ConviteForm;
+use app\models\Convite;
+
 class SiteController extends Controller
 {
     public function behaviors()
@@ -78,9 +81,11 @@ class SiteController extends Controller
     public function actionContact()
     {
         $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
+        if ($model->load(Yii::$app->request->post()) && 
+                $model->validate() && 
+                $model->contact(Yii::$app->params['adminEmail'])) 
+        {
             Yii::$app->session->setFlash('contactFormSubmitted');
-
             return $this->refresh();
         } else {
             return $this->render('contact', [
@@ -92,5 +97,43 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+    
+    
+    public function actionConvite()
+    {
+        $conviteForm = new ConviteForm(); 
+        $user = Yii::$app->user;
+        $nome = SiteController::ehPublicador($user)? $user['nome'] :"Admin"; 
+        $conviteForm->templateMessage($nome);
+
+        if($conviteForm->load(Yii::$app->request->post())){
+            $convite = new Convite();
+            $convite['email'] = $conviteForm['email'];
+            if(SiteController::ehPublicador($user)){
+                $convite['Publicador_idPublicador'] = $user['idPublicator'];
+            }
+
+            $siteMail = Yii::$app->params['adminEmail'];
+            $msg  = $conviteForm->getMessage(); 
+            if($convite->send($siteMail, $msg)) {
+                Yii::$app->session->setFlash('conviteFormSubmitted');                
+                return $this->refresh();
+            }
+        }
+
+        return $this->render('convite', [
+                'model' => $conviteForm,
+            ]);
+    }
+
+    public function actionAcessoPub()
+    {
+        return $this->render('about');
+    }
+    
+    public static function ehPublicador($user)
+    {
+        return $user->canGetProperty('idPublicator');
     }
 }
