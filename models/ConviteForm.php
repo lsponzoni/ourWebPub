@@ -12,9 +12,9 @@ class ConviteForm extends Model
 {
 	public $email;
 	public $message; 
-    
-	private $template = "%s convida ao OurWebPub.\n" ;
-    private $tokenLine = "Acesse o site \n Com o token: \n %s \n Até %s \n Para efetuar o cadastro.\n" ;
+
+	private $template = "%s convida ao OurWebPub." ;
+    private $tokenLine = "<br>Acesse o site <br>\n Com o token: <br>\r\n%s\r\n<br>\n Ate %s <br>\n Para efetuar o cadastro.<br>" ;
 
     /**
      * @return array the validation rules.

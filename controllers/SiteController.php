@@ -11,6 +11,7 @@ use app\models\ContactForm;
 
 use app\models\ConviteForm;
 use app\models\Convite;
+use app\models\ResponderConviteForm;
 
 class SiteController extends Controller
 {
@@ -127,13 +128,44 @@ class SiteController extends Controller
             ]);
     }
 
-    public function actionAcessoPub()
+
+    public function actionResponderConvite()
     {
-        return $this->render('about');
+        $model = new ResponderConviteForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $convite = $model->searchConvite();
+            if (isset($convite)) {
+                return $this->actionCreatePub($convite->idPublicador);
+            }
+        }
+
+        
+        return $this->render('responder_convite', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionCreatePub($idPub)
+    {
+        $model = new app\models\Publicador();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if(isset($idPub)){
+                $model->convidadoPor = $idPub;    
+            }
+
+            $model->save();
+            return $this->actionLogin();
+        }
+
+        return $this->render('site/cadastrar_pub', [
+            'model' => $model,
+        ]);
     }
     
     public static function ehPublicador($user)
     {
-        return $user->canGetProperty('idPublicator');
+        return $user->canGetProperty('idPublicador');
     }
 }
