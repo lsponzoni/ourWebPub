@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use \yii\db\ActiveRecord;
 /**
  * This is the model class for table "ConvitesValidos".
  *
@@ -14,7 +14,7 @@ use Yii;
  *
  * @property Publicador $publicadorIdPublicador
  */
-class Convite extends \yii\db\ActiveRecord
+class Convite extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -72,7 +72,8 @@ class Convite extends \yii\db\ActiveRecord
                 ->setTo($this->email)
                 ->setFrom([$ourEmail])
                 ->setSubject($defaultSubject)
-                ->setTextBody(sprintf($message, $this->token, $this->expiraEm))
+                ->setHtmlBody(sprintf($message, $this->token, $this->expiraEm))
+                ->set
                 ->send();
             return $this->save();
         } else {
