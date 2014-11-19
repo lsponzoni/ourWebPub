@@ -4,7 +4,7 @@ $this->title = 'My Yii Application';
 
 use yii\grid\GridView;
 use yii\widgets\ListView;
-
+use yii\helpers\Url;
 
 ?>
 
@@ -34,7 +34,7 @@ use yii\widgets\ListView;
                 ?>
                 </p>
 
-                <p><a class="btn btn-default" href="/site/publicacoes">Pesquisar Publicações &raquo;</a></p>
+                <p><a class="btn btn-default" href="<?=Url::to(['site/publicacoes'])?>">Pesquisar Publicações &raquo;</a></p>
             </div>
         </div>
         <div class="jumbotron">
@@ -51,7 +51,7 @@ use yii\widgets\ListView;
                 ?>
                 </p>
 
-                <p><a class="btn btn-default" href="/site/autores">Pesquisar Autores &raquo;</a></p>
+                <p><a class="btn btn-default" href="<?=Url::to(['site/autores'])?>">Pesquisar Autores &raquo;</a></p>
             </div>
         </div>
         <div class="jumbotron">
@@ -68,7 +68,7 @@ use yii\widgets\ListView;
                 ?>
                 </p>
 
-                <p><a class="btn btn-default" href="/site/grupos">Pesquisar Grupos &raquo;</a></p>
+                <p><a class="btn btn-default" href="<?=Url::to(['site/grupos'])?>">Pesquisar Grupos &raquo;</a></p>
             </div>
         </div>
     </div>

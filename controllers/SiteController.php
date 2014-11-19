@@ -89,6 +89,58 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionPublicacoes(){
+
+        $model = new Publicacao();
+
+        $dataProvider = new ActiveDataProvider([
+        'query' => Publicacao::find(),
+        'pagination' => [
+            'pageSize' => 50,
+            ],
+        ]);
+
+        return $this->render('publicacoes', [
+            'dataProvider' => $dataProvider,
+            'model' => $model,
+            ]);
+    }
+
+    public function actionAutores(){
+        
+        $model = new Publicador();
+
+        $dataProvider = new ActiveDataProvider([
+        'query' => Publicador::find(),
+        'pagination' => [
+            'pageSize' => 50,
+            ],
+        ]);
+
+
+        return $this->render('autores', [
+            'dataProvider' => $dataProvider,
+            'model' => $model,
+            ]);
+    }
+
+    public function actionGrupos(){
+         $model = new Grupo();
+
+        $dataProvider = new ActiveDataProvider([
+        'query' => Grupo::find(),
+        'pagination' => [
+            'pageSize' => 50,
+            ],
+        ]);
+
+
+        return $this->render('grupos', [
+            'dataProvider' => $dataProvider,
+            'model' => $model,
+            ]);
+    }
+
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
