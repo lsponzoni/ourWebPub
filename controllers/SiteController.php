@@ -13,6 +13,13 @@ use app\models\ConviteForm;
 use app\models\Convite;
 use app\models\ResponderConviteForm;
 
+use app\models\Publicador;
+use app\models\Publicacao;
+use app\models\Grupo;
+
+use yii\data\ActiveDataProvider;
+
+
 class SiteController extends Controller
 {
     public function behaviors()
@@ -53,7 +60,33 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+
+        $pub = new ActiveDataProvider([
+        'query' => Publicacao::find(),
+        'pagination' => [
+            'pageSize' => 5,
+            ],
+        ]);
+
+        $autor = new ActiveDataProvider([
+        'query' => Publicador::find(),
+        'pagination' => [
+            'pageSize' => 5,
+            ],
+        ]);
+
+        $grupo = new ActiveDataProvider([
+        'query' => Grupo::find(),
+        'pagination' => [
+            'pageSize' => 5,
+            ],
+        ]);
+
+        return $this->render('index', [
+            'dataProviderPublicacao' => $pub,
+            'dataProviderAutor' => $autor,
+            'dataProviderGrupo' => $grupo
+        ]);
     }
 
     public function actionLogin()

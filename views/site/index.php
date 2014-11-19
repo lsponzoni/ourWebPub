@@ -1,7 +1,13 @@
 <?php
 /* @var $this yii\web\View */
 $this->title = 'My Yii Application';
+
+use yii\grid\GridView;
+use yii\widgets\ListView;
+
+
 ?>
+
 <div class="site-index">
 
     <div class="jumbotron">
@@ -14,29 +20,57 @@ $this->title = 'My Yii Application';
 
     <div class="body-content">
 
-        <div class="row">
-            <div class="col-lg-4">
+        <div class="jumbotron">
+            <div >
                 <h2>Publicações</h2>
 
-                <p>Listagem últimas publicações</p>
+                <p>
+                 <?php
+                    echo GridView::widget([               
+                        'dataProvider' => $dataProviderPublicacao,
+                        'columns' => [ 'titulo:text:Publicação'],
+                        'emptyText' => 'Nenhuma publicação nova.',
+                    ]);
+                ?>
+                </p>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Pesquisar Publicações &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Autores</h2>
-
-                <p>listagem últimos autores</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Pesquisar Autores &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Grupos</h2>
-
-                <p>Listagem últimos grupos .</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Pesquisar Grupos &raquo;</a></p>
+                <p><a class="btn btn-default" href="/site/publicacoes">Pesquisar Publicações &raquo;</a></p>
             </div>
         </div>
+        <div class="jumbotron">
+            <div>
+                <h2>Autores</h2>
 
+                <p>
+                 <?php
+                    echo GridView::widget([               
+                        'dataProvider' => $dataProviderAutor,
+                        'columns' => [ 'nome:text:Autor'],
+                        'emptyText' => 'Nenhum autor novo.',
+                    ]);
+                ?>
+                </p>
+
+                <p><a class="btn btn-default" href="/site/autores">Pesquisar Autores &raquo;</a></p>
+            </div>
+        </div>
+        <div class="jumbotron">
+            <div >
+                <h2>Grupos</h2>
+
+                <p>
+                 <?php
+                    echo GridView::widget([               
+                        'dataProvider' => $dataProviderGrupo,
+                        'columns' => [ 'nome:text:Grupo'],
+                        'emptyText' => 'Nenhum grupo novo.',
+                    ]);
+                ?>
+                </p>
+
+                <p><a class="btn btn-default" href="/site/grupos">Pesquisar Grupos &raquo;</a></p>
+            </div>
+        </div>
+    </div>
     </div>
 </div>
