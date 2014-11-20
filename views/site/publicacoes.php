@@ -19,6 +19,7 @@ use yii\base\Model;
 	        	// ['class' => 'yii\grid\SerialColumn'],
 			        'titulo:text:Publicação',
 			        'ano:text:Ano',
+			        'local:text:Local',
 			      
 			      //['class' => 'yii\grid\ActionColumn'],
 	        ],

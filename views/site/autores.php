@@ -19,6 +19,7 @@ use yii\base\Model;
 	        	// ['class' => 'yii\grid\SerialColumn'],
 			        'nome:text:Autor',
 			        'email:text:Email',
+			        'login:text:Perfil',
 			      
 			      //['class' => 'yii\grid\ActionColumn'],
 	        ],
