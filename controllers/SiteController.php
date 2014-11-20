@@ -141,11 +141,19 @@ class SiteController extends Controller
             ]);
     }
 
+
+    public function actionPerfil()
+    {
+       return $this->render('perfil');
+    }
+
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
+
+        //var_dump($_POST);
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
