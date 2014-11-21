@@ -15,7 +15,7 @@ use Yii;
  * @property string $link
  * @property string $dataExata
  * @property string $tipo
- * @property integer $HistoricoPeriodico_Periódico_issn
+ * @property integer $HistoricoPeriodico_Periodico_issn
  * @property integer $HistoricoPeriodico_fasciculo
  * @property integer $HistoricoPeriodico_volume
  * @property string $HistoricoPeriodico_mes
@@ -23,10 +23,10 @@ use Yii;
  * @property integer $HistoricoConferencia_numEvento
  * @property integer $idPublicacao
  * @property integer $capituloLivro
- * @property integer $ediçõesLivro
+ * @property integer $edicoesLivro
  *
  * @property Correcao $correcao
- * @property Historicoperiodico $historicoPeriodicoPeriódicoIssn
+ * @property Historicoperiodico $historicoPeriodicoPeriodicoIssn
  * @property Historicoconferencia $historicoConferenciaAnoEvento
  * @property PublicacaoHasAreadepesquisa[] $publicacaoHasAreadepesquisas
  * @property Areadepesquisa[] $areaDePesquisaCodAreaPesquisas
@@ -54,7 +54,7 @@ class Publicacao extends \yii\db\ActiveRecord
         return [
             [['titulo', 'local', 'ano'], 'required'],
             [['ano', 'dataExata', 'HistoricoPeriodico_mes', 'HistoricoConferencia_anoEvento'], 'safe'],
-            [['PagInicial', 'PagFinal', 'HistoricoPeriodico_Periódico_issn', 'HistoricoPeriodico_fasciculo', 'HistoricoPeriodico_volume', 'HistoricoConferencia_numEvento', 'capituloLivro', 'ediçõesLivro'], 'integer'],
+            [['PagInicial', 'PagFinal', 'HistoricoPeriodico_Periodico_issn', 'HistoricoPeriodico_fasciculo', 'HistoricoPeriodico_volume', 'HistoricoConferencia_numEvento', 'capituloLivro', 'edicoesLivro'], 'integer'],
             [['titulo'], 'string', 'max' => 75],
             [['local', 'tipo'], 'string', 'max' => 45],
             [['link'], 'string', 'max' => 140],
@@ -76,7 +76,7 @@ class Publicacao extends \yii\db\ActiveRecord
             'link' => 'Link',
             'dataExata' => 'Data Exata',
             'tipo' => 'Tipo',
-            'HistoricoPeriodico_Periódico_issn' => 'Historico Periodico  Peri�dico Issn',
+            'HistoricoPeriodico_Periodico_issn' => 'Historico Periodico  Periodico Issn',
             'HistoricoPeriodico_fasciculo' => 'Historico Periodico Fasciculo',
             'HistoricoPeriodico_volume' => 'Historico Periodico Volume',
             'HistoricoPeriodico_mes' => 'Historico Periodico Mes',
@@ -84,7 +84,7 @@ class Publicacao extends \yii\db\ActiveRecord
             'HistoricoConferencia_numEvento' => 'Historico Conferencia Num Evento',
             'idPublicacao' => 'Id Publicacao',
             'capituloLivro' => 'Capitulo Livro',
-            'ediçõesLivro' => 'Edi��es Livro',
+            'edicoesLivro' => 'Edi��es Livro',
         ];
     }
 
@@ -99,9 +99,9 @@ class Publicacao extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getHistoricoPeriodicoPeriódicoIssn()
+    public function getHistoricoPeriodicoPeriodicoIssn()
     {
-        return $this->hasOne(Historicoperiodico::className(), ['Periodico_issn' => 'HistoricoPeriodico_Periódico_issn', 'fasciculo' => 'HistoricoPeriodico_fasciculo', 'volume' => 'HistoricoPeriodico_volume', 'mes' => 'HistoricoPeriodico_mes']);
+        return $this->hasOne(Historicoperiodico::className(), ['Periodico_issn' => 'HistoricoPeriodico_Periodico_issn', 'fasciculo' => 'HistoricoPeriodico_fasciculo', 'volume' => 'HistoricoPeriodico_volume', 'mes' => 'HistoricoPeriodico_mes']);
     }
 
     /**

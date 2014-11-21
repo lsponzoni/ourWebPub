@@ -17,8 +17,9 @@ use yii\base\Model;
 	        'columns' => [ 
 	        	
 	        	// ['class' => 'yii\grid\SerialColumn'],
-			        'nome:text:Autor',
-			        'email:text:Email',
+			        'titulo:text:Publicação',
+			        'ano:text:Ano',
+			        'local:text:Local',
 			      
 			      //['class' => 'yii\grid\ActionColumn'],
 	        ],

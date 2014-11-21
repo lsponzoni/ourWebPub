@@ -11,14 +11,12 @@ use yii\helpers\Url;
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Bem Vindo ao Site de Publicações!</h1>
+        <h2>Bem Vindo ao Site de Publicações!</h2>
 
         <p class="lead">Aqui você pode pesquisar por artigos, autores e grupos, postar suas próprias publicações e montar seu próprio perfil de pesquisa.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Comece Agora!</a></p>
     </div>
 
-    <div class="body-content">
+    <div >
 
         <div class="jumbotron">
             <div >
@@ -34,7 +32,7 @@ use yii\helpers\Url;
                 ?>
                 </p>
 
-                <p><a class="btn btn-default" href="<?=Url::to(['site/publicacoes'])?>">Pesquisar Publicações &raquo;</a></p>
+                <p><a class="btn btn-info" href="<?=Url::to(['site/publicacoes'])?>">Pesquisar Publicações &raquo;</a></p>
             </div>
         </div>
         <div class="jumbotron">
@@ -51,7 +49,7 @@ use yii\helpers\Url;
                 ?>
                 </p>
 
-                <p><a class="btn btn-default" href="<?=Url::to(['site/autores'])?>">Pesquisar Autores &raquo;</a></p>
+                <p><a class="btn btn-info" href="<?=Url::to(['site/autores'])?>">Pesquisar Autores &raquo;</a></p>
             </div>
         </div>
         <div class="jumbotron">
@@ -68,7 +66,7 @@ use yii\helpers\Url;
                 ?>
                 </p>
 
-                <p><a class="btn btn-default" href="<?=Url::to(['site/grupos'])?>">Pesquisar Grupos &raquo;</a></p>
+                <p><a class="btn btn-info" href="<?=Url::to(['site/grupos'])?>">Pesquisar Grupos &raquo;</a></p>
             </div>
         </div>
     </div>

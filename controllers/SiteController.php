@@ -16,6 +16,8 @@ use app\models\ResponderConviteForm;
 use app\models\Publicador;
 use app\models\Publicacao;
 use app\models\Grupo;
+use app\models\PublicaPeloGrupo;
+use app\models\PublicacaoHasGrupo;
 
 use yii\data\ActiveDataProvider;
 
@@ -60,7 +62,6 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-
         $pub = new ActiveDataProvider([
         'query' => Publicacao::find(),
         'pagination' => [
@@ -129,15 +130,61 @@ class SiteController extends Controller
 
         $dataProvider = new ActiveDataProvider([
         'query' => Grupo::find(),
+        'sort'=>array(
+                'attributes'=>array(
+                     'Grupo', 'Lider', 'nome'
+                ),
+            ),
         'pagination' => [
             'pageSize' => 50,
             ],
         ]);
 
+        // $grupos = Grupo::find()->all();
+        // foreach ($grupos as $grupo) 
+        // {
+        //     $grupo->nomeLider = Publicador::find("idPublicador = :id", array(":id" => $grupo->Lider))->all()[0]->nome;
+        // }
 
         return $this->render('grupos', [
             'dataProvider' => $dataProvider,
             'model' => $model,
+            ]);
+    }
+
+    public function actionPerfilGrupo($id, $grupo=NULL, $membros = NULL, $publicacoes = NULL){
+        if ($grupo == NULL) 
+        {
+            $grupo = Grupo::find()->where(array('Grupo' => $id))->all()[0];
+
+            $membrosId = PublicaPeloGrupo::find()->where(array('Grupo_Grupo' => $id))->all();
+            $membros = array();
+
+            array_push($membros, Publicador::find()->where(array('idPublicador' => $grupo->Lider))->all()[0]);
+            foreach ($membrosId as $membro) 
+            {
+                if($membro->Publicador_idPublicador != $grupo->Lider)
+                {
+                    array_push($membros, Publicador::find()->where(array('idPublicador' => $membro->Publicador_idPublicador))->all()[0]);
+                }
+
+            }
+            
+            $publicacoesId = PublicacaoHasGrupo::find()->where(array('Grupo_Grupo' => $grupo->Grupo))->all();
+            $publicacoes = array();
+
+            foreach ($publicacoesId as $publicacao) 
+            {
+                array_push($publicacoes, Publicacao::find()->where(array('idPublicacao' => $publicacao->Publicacao_idPublicacao))->all()[0]);                
+            }
+            
+        }
+
+        
+        return $this->render('perfil-grupo', [
+            'grupo' => $grupo,
+            'membros' => $membros,
+            'publicacoes' => $publicacoes
             ]);
     }
 
