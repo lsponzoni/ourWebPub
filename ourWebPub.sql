@@ -7,6 +7,42 @@ CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 COLLATE utf8_gener
 USE `mydb` ;
 
 -- -----------------------------------------------------
+-- Table `mydb`.`Conferencia`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Conferencia` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Conferencia` (
+  `acronimo` VARCHAR(10) NOT NULL,
+  `nome` VARCHAR(45) NOT NULL,
+  `qualisAtual` VARCHAR(2) NULL,
+  `alcance` VARCHAR(45) NULL,
+  PRIMARY KEY (`acronimo`),
+  UNIQUE INDEX `nome_UNIQUE` (`nome` ASC))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`HistoricoConferencia`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`HistoricoConferencia` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`HistoricoConferencia` (
+  `qualis` INT NOT NULL,
+  `numEvento` INT NOT NULL,
+  `anoEvento` YEAR NOT NULL,
+  `Conferencia_acronimo` VARCHAR(10) NOT NULL,
+  INDEX `fk_HistoricoConferencia_Conferencia1_idx` (`Conferencia_acronimo` ASC),
+  PRIMARY KEY (`anoEvento`, `numEvento`, `Conferencia_acronimo`),
+  CONSTRAINT `fk_HistoricoConferencia_Conferencia1`
+    FOREIGN KEY (`Conferencia_acronimo`)
+    REFERENCES `mydb`.`Conferencia` (`acronimo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+PACK_KEYS = DEFAULT;
+
+
+-- -----------------------------------------------------
 -- Table `mydb`.`Periodico`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `mydb`.`Periodico` ;
@@ -44,41 +80,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Conferencia`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Conferencia` ;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`Conferencia` (
-  `acronimo` VARCHAR(10) NOT NULL,
-  `nome` VARCHAR(45) NOT NULL,
-  `qualisAtual` VARCHAR(2) NULL,
-  `alcance` VARCHAR(45) NULL,
-  PRIMARY KEY (`acronimo`),
-  UNIQUE INDEX `nome_UNIQUE` (`nome` ASC))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`HistoricoConferencia`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`HistoricoConferencia` ;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`HistoricoConferencia` (
-  `qualis` INT NOT NULL,
-  `numEvento` INT NOT NULL,
-  `anoEvento` YEAR NOT NULL,
-  `Conferencia_acronimo` VARCHAR(10) NOT NULL,
-  INDEX `fk_HistoricoConferencia_Conferencia1_idx` (`Conferencia_acronimo` ASC),
-  PRIMARY KEY (`anoEvento`, `numEvento`, `Conferencia_acronimo`),
-  CONSTRAINT `fk_HistoricoConferencia_Conferencia1`
-    FOREIGN KEY (`Conferencia_acronimo`)
-    REFERENCES `mydb`.`Conferencia` (`acronimo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`Publicacao`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `mydb`.`Publicacao` ;
@@ -95,24 +96,25 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Publicacao` (
   `tipo` VARCHAR(45) NULL DEFAULT NULL,
   `capituloLivro` INT NULL DEFAULT NULL,
   `edicoesLivro` INT NULL DEFAULT NULL,
-  `HistoricoPeriodico_Periodico_issn` INT NULL,
-  `HistoricoPeriodico_fasciculo` INT NULL,
-  `HistoricoPeriodico_volume` INT NULL,
-  `HistoricoPeriodico_mes` DATE NULL,
-  `HistoricoConferencia_anoEvento` YEAR NOT NULL,
-  `HistoricoConferencia_numEvento` INT NOT NULL,
+  `HistoricoConferencia_anoEvento` YEAR NULL DEFAULT NULL,
+  `HistoricoConferencia_numEvento` INT NULL DEFAULT NULL,
+  `HistoricoConferencia_Conferencia_acronimo` VARCHAR(10) NULL DEFAULT NULL,
+  `HistoricoPeriodico_Periodico_issn` INT NULL DEFAULT NULL,
+  `HistoricoPeriodico_fasciculo` INT NULL DEFAULT NULL,
+  `HistoricoPeriodico_volume` INT NULL DEFAULT NULL,
+  `HistoricoPeriodico_mes` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`idPublicacao`),
   UNIQUE INDEX `titulo_UNIQUE` (`titulo` ASC),
+  INDEX `fk_Publicacao_HistoricoConferencia1_idx` (`HistoricoConferencia_anoEvento` ASC, `HistoricoConferencia_numEvento` ASC, `HistoricoConferencia_Conferencia_acronimo` ASC),
   INDEX `fk_Publicacao_HistoricoPeriodico1_idx` (`HistoricoPeriodico_Periodico_issn` ASC, `HistoricoPeriodico_fasciculo` ASC, `HistoricoPeriodico_volume` ASC, `HistoricoPeriodico_mes` ASC),
-  INDEX `fk_Publicacao_HistoricoConferencia1_idx` (`HistoricoConferencia_anoEvento` ASC, `HistoricoConferencia_numEvento` ASC),
+  CONSTRAINT `fk_Publicacao_HistoricoConferencia1`
+    FOREIGN KEY (`HistoricoConferencia_anoEvento` , `HistoricoConferencia_numEvento` , `HistoricoConferencia_Conferencia_acronimo`)
+    REFERENCES `mydb`.`HistoricoConferencia` (`anoEvento` , `numEvento` , `Conferencia_acronimo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_Publicacao_HistoricoPeriodico1`
     FOREIGN KEY (`HistoricoPeriodico_Periodico_issn` , `HistoricoPeriodico_fasciculo` , `HistoricoPeriodico_volume` , `HistoricoPeriodico_mes`)
     REFERENCES `mydb`.`HistoricoPeriodico` (`Periodico_issn` , `fasciculo` , `volume` , `mes`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Publicacao_HistoricoConferencia1`
-    FOREIGN KEY (`HistoricoConferencia_anoEvento` , `HistoricoConferencia_numEvento`)
-    REFERENCES `mydb`.`HistoricoConferencia` (`anoEvento` , `numEvento`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -461,16 +463,6 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
--- Data for table `mydb`.`Periodico`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `mydb`;
-INSERT INTO `mydb`.`Periodico` (`issn`, `nome`, `volumeAtual`, `fasciculoAtual`, `mesAtual`, `qualisAtual`, `alcance`) VALUES (1, 'NT', 1, 1, '1', 'C1', 'Nacional');
-
-COMMIT;
-
-
--- -----------------------------------------------------
 -- Data for table `mydb`.`Conferencia`
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -485,7 +477,27 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `mydb`;
-INSERT INTO `mydb`.`HistoricoConferencia` (`qualis`, `numEvento`, `anoEvento`, `Conferencia_acronimo`) VALUES (c1, 1, 111, 'CB');
+INSERT INTO `mydb`.`HistoricoConferencia` (`qualis`, `numEvento`, `anoEvento`, `Conferencia_acronimo`) VALUES ('c1', 1, 111, 'CB');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Periodico`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Periodico` (`issn`, `nome`, `volumeAtual`, `fasciculoAtual`, `mesAtual`, `qualisAtual`, `alcance`) VALUES (1, 'NT', 1, 1, '1', 'C1', 'Nacional');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`HistoricoPeriodico`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`HistoricoPeriodico` (`qualis`, `Periodico_issn`, `volume`, `fasciculo`, `mes`) VALUES ('C1', 1, 1, 1, '1');
 
 COMMIT;
 
@@ -495,9 +507,9 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `mydb`;
-INSERT INTO `mydb`.`Publicacao` (`idPublicacao`, `titulo`, `local`, `ano`, `PagInicial`, `PagFinal`, `link`, `dataExata`, `tipo`, `capituloLivro`, `edicoesLivro`, `HistoricoPeriodico_Periodico_issn`, `HistoricoPeriodico_fasciculo`, `HistoricoPeriodico_volume`, `HistoricoPeriodico_mes`, `HistoricoConferencia_anoEvento`, `HistoricoConferencia_numEvento`) VALUES (0, 'Alpha', 'PoA', 191, 1, 10, 'Localhost', '4/4/1991', 'Capitulo', 10, 1, null, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `mydb`.`Publicacao` (`idPublicacao`, `titulo`, `local`, `ano`, `PagInicial`, `PagFinal`, `link`, `dataExata`, `tipo`, `capituloLivro`, `edicoesLivro`, `HistoricoPeriodico_Periodico_issn`, `HistoricoPeriodico_fasciculo`, `HistoricoPeriodico_volume`, `HistoricoPeriodico_mes`, `HistoricoConferencia_anoEvento`, `HistoricoConferencia_numEvento`) VALUES (1, 'A', 'PoA', 192, 2, 11, 'Localhost', '4/5/1991', 'Conferencia', , , , , , '', 1, 1);
-INSERT INTO `mydb`.`Publicacao` (`idPublicacao`, `titulo`, `local`, `ano`, `PagInicial`, `PagFinal`, `link`, `dataExata`, `tipo`, `capituloLivro`, `edicoesLivro`, `HistoricoPeriodico_Periodico_issn`, `HistoricoPeriodico_fasciculo`, `HistoricoPeriodico_volume`, `HistoricoPeriodico_mes`, `HistoricoConferencia_anoEvento`, `HistoricoConferencia_numEvento`) VALUES (2, 'B', 'PoA', 193, 3, 12, 'Localhost', '4/6/1991', 'Periodico', , , 1, 1, 1, '1', NULL, NULL);
+INSERT INTO `mydb`.`Publicacao` (`idPublicacao`, `titulo`, `local`, `ano`, `PagInicial`, `PagFinal`, `link`, `dataExata`, `tipo`, `capituloLivro`, `edicoesLivro`, `HistoricoConferencia_anoEvento`, `HistoricoConferencia_numEvento`, `HistoricoConferencia_Conferencia_acronimo`, `HistoricoPeriodico_Periodico_issn`, `HistoricoPeriodico_fasciculo`, `HistoricoPeriodico_volume`, `HistoricoPeriodico_mes`) VALUES (0, 'Alpha', 'PoA', 191, 1, 10, 'Localhost', '4/4/1991', 'Capitulo', 10, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `mydb`.`Publicacao` (`idPublicacao`, `titulo`, `local`, `ano`, `PagInicial`, `PagFinal`, `link`, `dataExata`, `tipo`, `capituloLivro`, `edicoesLivro`, `HistoricoConferencia_anoEvento`, `HistoricoConferencia_numEvento`, `HistoricoConferencia_Conferencia_acronimo`, `HistoricoPeriodico_Periodico_issn`, `HistoricoPeriodico_fasciculo`, `HistoricoPeriodico_volume`, `HistoricoPeriodico_mes`) VALUES (1, 'A', 'PoA', 192, 2, 11, 'Localhost', '4/5/1991', 'Conferencia', null, null, 111, 1, 'CB', NULL, NULL, NULL, NULL);
+INSERT INTO `mydb`.`Publicacao` (`idPublicacao`, `titulo`, `local`, `ano`, `PagInicial`, `PagFinal`, `link`, `dataExata`, `tipo`, `capituloLivro`, `edicoesLivro`, `HistoricoConferencia_anoEvento`, `HistoricoConferencia_numEvento`, `HistoricoConferencia_Conferencia_acronimo`, `HistoricoPeriodico_Periodico_issn`, `HistoricoPeriodico_fasciculo`, `HistoricoPeriodico_volume`, `HistoricoPeriodico_mes`) VALUES (2, 'B', 'PoA', 193, 3, 12, 'Localhost', '4/6/1991', 'Periodico', null, null, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 COMMIT;
 
