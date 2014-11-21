@@ -39,7 +39,7 @@ use app\models\Publicador;
 			        	'enableSorting' => 'true',
 			        	'value' => function($data)
 			        		{
-			        			return Publicador::find("idPublicador = :id", array(":id" => $data->Lider))->all()[0]->nome;
+			        			return Publicador::find()->where(array("idPublicador"=> $data->Lider))->all()[0]->nome;
 			        		}
 			        	),
 			        

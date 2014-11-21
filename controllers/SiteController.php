@@ -14,12 +14,18 @@ use app\models\Convite;
 use app\models\ResponderConviteForm;
 
 use app\models\Publicador;
+use app\models\Abreviaturas;
 use app\models\Publicacao;
 use app\models\Grupo;
 use app\models\PublicaPeloGrupo;
 use app\models\PublicacaoHasGrupo;
+use app\models\PublicacaoHasReferencias;
+use app\models\Areadepesquisa;
+use app\models\PublicacaoHasAreadepesquisa;
+use app\models\PublicacaoHasPublicador;
 
 use yii\data\ActiveDataProvider;
+use yii\helpers\Url;
 
 
 class SiteController extends Controller
@@ -185,6 +191,116 @@ class SiteController extends Controller
             'grupo' => $grupo,
             'membros' => $membros,
             'publicacoes' => $publicacoes
+            ]);
+    }
+
+    public function actionPerfilPublicacao($id, $publicacao=NULL){
+        if ($publicacao == NULL) 
+        {
+            $publicacao = array();
+
+            $publicacao["publicacao"] = Publicacao::find()->where(array('idPublicacao' => $id))->all()[0];
+
+            //
+            //pegando as referencias
+            //
+            $refs = PublicacaoHasReferencias::find()->where(array('Publicacao_idPublicacao' => $id))->all();
+            $referencias = array();
+
+            foreach ($refs as $ref) 
+            {
+                if ($ref->Publicacao_idPublicacao != NULL)
+                {
+                    $publica = Publicacao::find()->where(array('idPublicacao' => $ref->Publicacao_idPublicacao))->all()[0];
+
+                    $url = Url::to(['perfil-publicacao', 'id' => $publica->idPublicacao]);
+                                    
+                    $data = '<a href ='.$url.'>'.$publica->titulo.'</a>';
+                }
+                else
+                {
+                    if ($ref->descricaoRef != NULL)
+                    {
+                        $data = $ref->descricaoRef;
+                    }
+                    else
+                    {
+                        continue;//não tem uma referencia válida, pula essa ref (Helena)
+                    }
+                }
+
+                array_push($referencias, $data);
+            }
+            $publicacao["referencias"] = $referencias;
+            
+
+            //
+            //pegando as áreas de pesquisa
+            //
+            $areasID = PublicacaoHasAreadepesquisa::find()->where(array('Publicacao_idPublicacao' => $id))->all();
+            $areas = array();
+
+            foreach ($areasID as $areaID) 
+            {
+                $area = Areadepesquisa::find()->where(array('codAreaPesquisa' => $areaID->AreaDePesquisa_codAreaPesquisa))->all()[0]->nome;
+
+                array_push($areas, $area);
+            }
+            $publicacao["areas"] = $areas;
+
+
+            //
+            //pegando os publicadores
+            //
+            $pubs = PublicacaoHasPublicador::find()->where(array('Publicacao_idPublicacao' => $id))->all();
+            $publicadores = array();
+           
+            foreach ($pubs as $pub) 
+            {                
+                $publicador = Publicador::find()->where(array('idPublicador' => $pub->Publicador_idPublicador))->all()[0];
+                $abbr = Abreviaturas::find()->where(array('Publicador_idPublicador' => $publicador->idPublicador))->all()[0]->nome;//pegando sempre a primeira abreviatura pq espera-se que seja a mais utilizada (Helena)
+
+                if ($abbr == NULL) 
+                {
+                    $abbr = $publicador->nome;
+                }
+
+                $url = Url::to(['perfil-autor', 'id' => $publicador->idPublicador]);
+                                
+                $data = '<a href ='.$url.'>'.$abbr.'</a>';
+                
+
+                array_push($publicadores, $data);
+            }
+            $publicacao["publicadores"] = $publicadores;
+
+
+
+            //
+            //pegando os grupos
+            //
+            $gruposID = PublicacaoHasGrupo::find()->where(array('Publicacao_idPublicacao' => $id))->all();
+            $grupos = array();
+
+            foreach ($gruposID as $grupoID) 
+            {                
+                $grupo = Grupo::find()->where(array('Grupo' => $grupoID->Grupo_Grupo))->all()[0];
+
+                $nome = $grupo->nome;
+
+                $url = Url::to(['perfil-grupo', 'id' => $grupo->Grupo]);
+                                
+                $data = '<a href ='.$url.'>'.$nome.'</a>';
+                
+
+                array_push($grupos, $data);
+            }
+            $publicacao["grupos"] = $grupos;
+            
+        }
+        
+        return $this->render('perfil-publicacao', [
+            'publicacao' => $publicacao
             ]);
     }
 
