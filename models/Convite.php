@@ -73,11 +73,19 @@ class Convite extends ActiveRecord
                 ->setFrom([$ourEmail])
                 ->setSubject($defaultSubject)
                 ->setHtmlBody(sprintf($message, $this->token, $this->expiraEm))
-                ->set
                 ->send();
             return $this->save();
         } else {
             return false;
         }
     }
+    public function getId()
+    {
+        return isset($this->Publicador_idPublicador)? $this->Publicador_idPublicador: NULL;
+    }
+    public function getEmail() 
+    {
+        return $this->email;
+    }
+
 }

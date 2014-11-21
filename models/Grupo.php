@@ -27,7 +27,7 @@ class Grupo extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'grupo';
+        return 'Grupo';
     }
 
     /**

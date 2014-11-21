@@ -251,10 +251,7 @@ class SiteController extends Controller
         if($conviteForm->load(Yii::$app->request->post())){
             $convite = new Convite();
             $convite['email'] = $conviteForm['email'];
-            if(SiteController::ehPublicador($user)){
-                $convite['Publicador_idPublicador'] = $user['idPublicator'];
-            }
-
+            $convite['Publicador_idPublicador'] = (SiteController::ehPublicador($user))? $user['idPublicator'] : NULL;
             $siteMail = Yii::$app->params['adminEmail'];
             $msg  = $conviteForm->getMessage(); 
             if($convite->send($siteMail, $msg)) {
@@ -276,30 +273,14 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $convite = $model->searchConvite();
             if (isset($convite)) {
-                return $this->actionCreatePub($convite->idPublicador);
+                return $this->redirect([ 'publicador/create',
+                    'email' => $convite->getEmail(),
+                    'idPub' => $convite->getId()
+                ]);
             }
         }
 
-        
         return $this->render('responder_convite', [
-            'model' => $model,
-        ]);
-    }
-
-    public function actionCreatePub($idPub)
-    {
-        $model = new app\models\Publicador();
-
-        if ($model->load(Yii::$app->request->post())) {
-            if(isset($idPub)){
-                $model->convidadoPor = $idPub;    
-            }
-
-            $model->save();
-            return $this->actionLogin();
-        }
-
-        return $this->render('site/cadastrar_pub', [
             'model' => $model,
         ]);
     }
