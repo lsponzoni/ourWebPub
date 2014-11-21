@@ -32,7 +32,19 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        $pub = Publicador::find('idPublicador = :id', [':id' => $id])->one();
+        if($pub)
+        {
+            $user = [
+                'id' => $pub->idPublicador,
+                'username' => $pub->login,
+                'password' => $pub->senha,
+                'authKey' =>  $pub->idPublicador,
+                'accessToken' => $pub->idPublicador,
+            ];
+            return new static($user);
+        }
+        return null;
     }
 
     /**
@@ -40,12 +52,19 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
+        
+        $pub = Publicador::find('idPublicador = :id', [':id' => $token])->one();
+        if($pub)
+        {
+            $user = [
+                'id' => $pub->idPublicador,
+                'username' => $pub->login,
+                'password' => $pub->senha,
+                'authKey' =>  $pub->idPublicador,
+                'accessToken' => $pub->idPublicador,
+            ];
+            return new static($user);
         }
-
         return null;
     }
 
@@ -63,6 +82,18 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
             }
         }
 
+        $pub = Publicador::find('login = :user', [':user' => $username])->one();
+        if($pub)
+        {
+            $user = [
+                'id' => $pub->idPublicador,
+                'username' => $pub->login,
+                'password' => $pub->senha,
+                'authKey' =>  $pub->idPublicador,
+                'accessToken' => $pub->idPublicador,
+            ];
+            return new static($user);
+        }
         return null;
     }
 
