@@ -148,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Publicador` (
   `endereco` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
   `convidadoPor` INT NULL,
+  `file` BLOB NULL,
   PRIMARY KEY (`idPublicador`),
   UNIQUE INDEX `Publicadorcol_UNIQUE` (`nome` ASC),
   INDEX `fk_Publicador_Publicador1_idx` (`convidadoPor` ASC),
@@ -420,8 +421,8 @@ DROP TABLE IF EXISTS `mydb`.`Publicacao_has_Referencias` ;
 CREATE TABLE IF NOT EXISTS `mydb`.`Publicacao_has_Referencias` (
   `Publicacao_idPublicacao` INT NOT NULL,
   `Publicacao_referencia` INT NULL DEFAULT NULL,
-  `descricaoRef` VARCHAR(140) NULL,
-  PRIMARY KEY (`Publicacao_idPublicacao`),
+  `descricaoRef` VARCHAR(140) NOT NULL,
+  PRIMARY KEY (`Publicacao_idPublicacao`, `descricaoRef`),
   INDEX `fk_Publicacao_has_Publicacao_Publicacao2_idx` (`Publicacao_referencia` ASC),
   INDEX `fk_Publicacao_has_Publicacao_Publicacao1_idx` (`Publicacao_idPublicacao` ASC),
   CONSTRAINT `fk_Publicacao_has_Publicacao_Publicacao1`
@@ -510,6 +511,16 @@ USE `mydb`;
 INSERT INTO `mydb`.`Publicacao` (`idPublicacao`, `titulo`, `local`, `ano`, `PagInicial`, `PagFinal`, `link`, `dataExata`, `tipo`, `capituloLivro`, `edicoesLivro`, `HistoricoConferencia_anoEvento`, `HistoricoConferencia_numEvento`, `HistoricoConferencia_Conferencia_acronimo`, `HistoricoPeriodico_Periodico_issn`, `HistoricoPeriodico_fasciculo`, `HistoricoPeriodico_volume`, `HistoricoPeriodico_mes`) VALUES (0, 'Alpha', 'PoA', 191, 1, 10, 'Localhost', '4/4/1991', 'Capitulo', 10, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `mydb`.`Publicacao` (`idPublicacao`, `titulo`, `local`, `ano`, `PagInicial`, `PagFinal`, `link`, `dataExata`, `tipo`, `capituloLivro`, `edicoesLivro`, `HistoricoConferencia_anoEvento`, `HistoricoConferencia_numEvento`, `HistoricoConferencia_Conferencia_acronimo`, `HistoricoPeriodico_Periodico_issn`, `HistoricoPeriodico_fasciculo`, `HistoricoPeriodico_volume`, `HistoricoPeriodico_mes`) VALUES (1, 'A', 'PoA', 192, 2, 11, 'Localhost', '4/5/1991', 'Conferencia', null, null, 111, 1, 'CB', NULL, NULL, NULL, NULL);
 INSERT INTO `mydb`.`Publicacao` (`idPublicacao`, `titulo`, `local`, `ano`, `PagInicial`, `PagFinal`, `link`, `dataExata`, `tipo`, `capituloLivro`, `edicoesLivro`, `HistoricoConferencia_anoEvento`, `HistoricoConferencia_numEvento`, `HistoricoConferencia_Conferencia_acronimo`, `HistoricoPeriodico_Periodico_issn`, `HistoricoPeriodico_fasciculo`, `HistoricoPeriodico_volume`, `HistoricoPeriodico_mes`) VALUES (2, 'B', 'PoA', 193, 3, 12, 'Localhost', '4/6/1991', 'Periodico', null, null, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Publicador`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Publicador` (`idPublicador`, `nome`, `login`, `senha`, `endereco`, `email`, `convidadoPor`, `file`) VALUES (1, 'Joao', 'Ar', 'A', 'PoA', 'j@mail.com', NULL, NULL);
 
 COMMIT;
 
