@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Publicacao` (
   `link` VARCHAR(140) NULL,
   `dataExata` DATE NULL,
   `tipo` VARCHAR(45) NULL,
-  `HistoricoPeriodico_Periódico_issn` INT NULL,
+  `HistoricoPeriodico_Periodico_issn` INT NULL,
   `HistoricoPeriodico_fasciculo` INT NULL,
   `HistoricoPeriodico_volume` INT NULL,
   `HistoricoPeriodico_mes` DATE NULL,
@@ -100,13 +100,13 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Publicacao` (
   `HistoricoConferencia_numEvento` INT NULL,
   `idPublicacao` INT NOT NULL AUTO_INCREMENT,
   `capituloLivro` INT NULL,
-  `ediçõesLivro` INT NULL,
+  `edicoesLivro` INT NULL,
   PRIMARY KEY (`idPublicacao`),
-  INDEX `fk_Publicacao_HistoricoPeriodico1_idx` (`HistoricoPeriodico_Periódico_issn` ASC, `HistoricoPeriodico_fasciculo` ASC, `HistoricoPeriodico_volume` ASC, `HistoricoPeriodico_mes` ASC),
+  INDEX `fk_Publicacao_HistoricoPeriodico1_idx` (`HistoricoPeriodico_Periodico_issn` ASC, `HistoricoPeriodico_fasciculo` ASC, `HistoricoPeriodico_volume` ASC, `HistoricoPeriodico_mes` ASC),
   INDEX `fk_Publicacao_HistoricoConferencia1_idx` (`HistoricoConferencia_anoEvento` ASC, `HistoricoConferencia_numEvento` ASC),
   UNIQUE INDEX `titulo_UNIQUE` (`titulo` ASC),
   CONSTRAINT `fk_Publicacao_HistoricoPeriodico1`
-    FOREIGN KEY (`HistoricoPeriodico_Periódico_issn` , `HistoricoPeriodico_fasciculo` , `HistoricoPeriodico_volume` , `HistoricoPeriodico_mes`)
+    FOREIGN KEY (`HistoricoPeriodico_Periodico_issn` , `HistoricoPeriodico_fasciculo` , `HistoricoPeriodico_volume` , `HistoricoPeriodico_mes`)
     REFERENCES `mydb`.`HistoricoPeriodico` (`Periodico_issn` , `fasciculo` , `volume` , `mes`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -418,7 +418,7 @@ DROP TABLE IF EXISTS `mydb`.`Publicacao_has_Referencias` ;
 CREATE TABLE IF NOT EXISTS `mydb`.`Publicacao_has_Referencias` (
   `Publicacao_idPublicacao` INT NOT NULL,
   `Publicacao_referencia` INT NOT NULL,
-  `descriçãoRef` VARCHAR(140) NULL,
+  `descricaoRef` VARCHAR(140) NULL,
   PRIMARY KEY (`Publicacao_idPublicacao`),
   INDEX `fk_Publicacao_has_Publicacao_Publicacao2_idx` (`Publicacao_referencia` ASC),
   INDEX `fk_Publicacao_has_Publicacao_Publicacao1_idx` (`Publicacao_idPublicacao` ASC),
