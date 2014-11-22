@@ -425,7 +425,7 @@ class SiteController extends Controller
 
     public function actionPerfil()
     {
-       return $this->render('perfil');
+        return $this->actionPerfilAutor(Yii::$app->user->id);
     }
 
     public function actionLogin()
