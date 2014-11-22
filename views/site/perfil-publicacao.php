@@ -107,4 +107,5 @@ td.left{
 	    	<?php endif; ?>
 	    </table>
 	</div>
+</div>
 </div><!-- site-convite -->

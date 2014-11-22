@@ -23,6 +23,9 @@ use app\models\PublicacaoHasReferencias;
 use app\models\Areadepesquisa;
 use app\models\PublicacaoHasAreadepesquisa;
 use app\models\PublicacaoHasPublicador;
+use app\models\AreadepesquisaHasPublicador;
+use app\models\Trabalhaem;
+use app\models\Instituicao;
 
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
@@ -301,6 +304,121 @@ class SiteController extends Controller
         
         return $this->render('perfil-publicacao', [
             'publicacao' => $publicacao
+            ]);
+    }
+
+    public function actionPerfilAutor($id, $publicador=NULL){
+        if ($publicador == NULL) 
+        {
+            $publicador = array();
+
+            $publicador["publicador"] = Publicador::find()->where(array('idPublicador' => $id))->all()[0];
+
+            //
+            //pegando as abreviaturas
+            //
+            $abbrs = Abreviaturas::find()->where(array('Publicador_idPublicador' => $id))->all();
+            $abreviaturas = array();
+           
+            foreach ($abbrs as $abbr) 
+            {                
+                array_push($abreviaturas, $abbr->nome);
+            }
+            $publicador["abreviaturas"] = $abreviaturas;
+            
+
+            //
+            //pegando as áreas de pesquisa
+            //
+            $areasNome = AreadepesquisaHasPublicador::find()->where(array('Publicador_idPublicador' => $id))->all();//esse model pega os nomes já
+            $areas = array();
+
+            foreach ($areasNome as $areaNome) 
+            {
+                array_push($areas, $areaNome->AreaDePesquisa_nome);
+            }
+            $publicador["areas"] = $areas;
+
+
+            //
+            //pegando os locais de trabalho
+            //
+            $locaisID = Trabalhaem::find()->where(array('Publicador_idPublicador' => $id))->all();
+            $locais = array();
+
+            foreach ($locaisID as $localID) 
+            {                
+                $local = Instituicao::find()->where(array('id' => $localID->idInstituicao))->all()[0]->nome;
+
+                array_push($locais, $local);
+            }
+            $publicador["locais"] = $locais;
+
+
+            //
+            //pegando as publicacoes, mantendo o model para fazer CGridView
+            //
+            $pubs = PublicacaoHasPublicador::find()->where(array('Publicador_idPublicador' => $id))->all();
+            $publicacoes = array();
+            $dataA = array();
+            $model = array();
+           
+            foreach ($pubs as $pub) 
+            {                
+                $publicacao = Publicacao::find()->where(array('idPublicacao' => $pub->Publicacao_idPublicacao))->all()[0];
+
+                $url = Url::to(['perfil-publicacao', 'id' => $publicacao->idPublicacao]);
+
+                $data = '<a href ='.$url.'>'.$publicacao->titulo.'</a>';                
+
+                array_push($dataA, $data);
+                array_push($model, $publicacao);
+            }
+            $publicacoes["model"] = $model;
+            $publicacoes["data"] = $dataA;
+            $publicador["publicacoes"] = $publicacoes;
+
+
+
+            //
+            //pegando os grupos
+            //
+            $grupos = array();
+
+            $gruposliderados = Grupo::find()->where(array('Lider' => $id))->all();
+            foreach ($gruposliderados as $grupo) 
+            {                
+                $nome = $grupo->nome;
+
+                $url = Url::to(['perfil-grupo', 'id' => $grupo->Grupo]);
+                                
+                $data = '<a href ='.$url.'>'.$nome.'</a>';
+                
+
+                array_push($grupos, $data);
+            }
+
+            $gruposID = PublicaPeloGrupo::find()->where(array('Publicador_idPublicador' => $id))->all();
+
+            foreach ($gruposID as $grupoID) 
+            {                
+                $grupo = Grupo::find()->where(array('Grupo' => $grupoID->Grupo_Grupo))->all()[0];
+
+                $nome = $grupo->nome;
+
+                $url = Url::to(['perfil-grupo', 'id' => $grupo->Grupo]);
+                                
+                $data = '<a href ='.$url.'>'.$nome.'</a>';
+                
+
+                array_push($grupos, $data);
+            }
+            $publicador["grupos"] = $grupos;
+            
+        }
+        
+        return $this->render('perfil-autor', [
+            'publicador' => $publicador
             ]);
     }
 
