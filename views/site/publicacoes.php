@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 use yii\base\Model;
+use yii\helpers\Url;
 
 ?>
 
@@ -17,7 +18,18 @@ use yii\base\Model;
 	        'columns' => [ 
 	        	
 	        	// ['class' => 'yii\grid\SerialColumn'],
-			        'titulo:text:Publicação',
+			        array(
+			        	'attribute' => 'titulo' ,
+			        	'label' => "Título",
+			        	'format' => 'html',
+			        	'enableSorting' => 'true',
+			        	'value' => function($data)
+			        		{
+			        			$url = Url::to(['perfil-publicacao', 'id' => $data->idPublicacao]);
+			        			
+			        			return '<a href ='.$url.'>'.$data->titulo.'</a>';
+			        		}
+			        	),
 			        'ano:text:Ano',
 			        'local:text:Local',
 			      

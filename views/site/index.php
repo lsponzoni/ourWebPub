@@ -26,7 +26,18 @@ use yii\helpers\Url;
                  <?php
                     echo GridView::widget([               
                         'dataProvider' => $dataProviderPublicacao,
-                        'columns' => [ 'titulo:text:Publicação'],
+                        'columns' => [ array(
+                        'attribute' => 'titulo' ,
+                        'label' => "Título",
+                        'format' => 'html',
+                        'enableSorting' => 'true',
+                        'value' => function($data)
+                            {
+                                $url = Url::to(['perfil-publicacao', 'id' => $data->idPublicacao]);
+                                
+                                return '<a href ='.$url.'>'.$data->titulo.'</a>';
+                            }
+                        ),],
                         'emptyText' => 'Nenhuma publicação nova.',
                     ]);
                 ?>
@@ -43,7 +54,18 @@ use yii\helpers\Url;
                  <?php
                     echo GridView::widget([               
                         'dataProvider' => $dataProviderAutor,
-                        'columns' => [ 'nome:text:Autor'],
+                        'columns' => [ array(
+                        'attribute' => 'nome' ,
+                        'label' => "Autor",
+                        'format' => 'html',
+                        'enableSorting' => 'true',
+                        'value' => function($data)
+                            {
+                                $url = Url::to(['perfil-autor', 'id' => $data->idPublicador]);
+                                
+                                return '<a href ='.$url.'>'.$data->nome.'</a>';
+                            }
+                        ),],
                         'emptyText' => 'Nenhum autor novo.',
                     ]);
                 ?>
@@ -60,7 +82,18 @@ use yii\helpers\Url;
                  <?php
                     echo GridView::widget([               
                         'dataProvider' => $dataProviderGrupo,
-                        'columns' => [ 'nome:text:Grupo'],
+                        'columns' => [ array(
+                        'attribute' => 'nome' ,
+                        'label' => "Grupo",
+                        'format' => 'html',
+                        'enableSorting' => 'true',
+                        'value' => function($data)
+                            {
+                                $url = Url::to(['perfil-grupo', 'id' => $data->Grupo]);
+                                
+                                return '<a href ='.$url.'>'.$data->nome.'</a>';
+                            }
+                        ),],
                         'emptyText' => 'Nenhum grupo novo.',
                     ]);
                 ?>

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 use yii\base\Model;
+use yii\helpers\Url;
 
 ?>
 
@@ -17,7 +18,18 @@ use yii\base\Model;
 	        'columns' => [ 
 	        	
 	        	// ['class' => 'yii\grid\SerialColumn'],
-			        'nome:text:Autor',
+			        array(
+			        	'attribute' => 'nome' ,
+			        	'label' => "Autor",
+			        	'format' => 'html',
+			        	'enableSorting' => 'true',
+			        	'value' => function($data)
+			        		{
+			        			$url = Url::to(['perfil-autor', 'id' => $data->idPublicador]);
+			        			
+			        			return '<a href ='.$url.'>'.$data->nome.'</a>';
+			        		}
+			        	),
 			        'email:text:Email',
 			      
 			      //['class' => 'yii\grid\ActionColumn'],
