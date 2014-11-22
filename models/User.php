@@ -32,7 +32,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-        $pub = Publicador::find('idPublicador = :id', [':id' => $id])->one();
+        $pub = Publicador::find()->where(array('idPublicador' => $id))->one();
         if($pub)
         {
             $user = [
@@ -82,7 +82,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
             }
         }
 
-        $pub = Publicador::find('login = :user', [':user' => $username])->one();
+        $pub = Publicador::find()->where(array('login' => $username))->one();
         if($pub)
         {
             $user = [
